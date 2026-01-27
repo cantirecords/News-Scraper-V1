@@ -1,32 +1,38 @@
 [
     {
-        "name": "CNN Top Stories",
+        "name": "CNN",
         "url": "http://rss.cnn.com/rss/cnn_topstories.rss",
-        "category": "World",
+        "category": "WORLD",
         "language": "en"
     },
     {
-        "name": "Fox News US",
-        "url": "http://feeds.foxnews.com/foxnews/national",
-        "category": "National",
+        "name": "Fox News",
+        "url": "http://feeds.foxnews.com/foxnews/latest",
+        "category": "US",
         "language": "en"
     },
     {
-        "name": "ABC News International",
-        "url": "https://abcnews.go.com/abcnews/internationalheadlines",
-        "category": "World",
+        "name": "ABC News",
+        "url": "https://abcnews.go.com/abcnews/topstories",
+        "category": "WORLD",
         "language": "en"
     },
     {
-        "name": "BBC News US & Canada",
-        "url": "http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml",
-        "category": "National",
+        "name": "NBC News",
+        "url": "https://feeds.nbcnews.com/nbcnews/public/world",
+        "category": "WORLD",
         "language": "en"
     },
     {
-        "name": "Telemundo Noticias",
-        "url": "https://www.telemundo.com/feeds/noticias/rss",
-        "category": "National",
+        "name": "NY Post",
+        "url": "https://nypost.com/feed/",
+        "category": "US",
+        "language": "en"
+    },
+    {
+        "name": "Telemundo",
+        "url": "https://www.telemundo.com/feeds/get-rss/v1/noticias",
+        "category": "GENERAL",
         "language": "es"
     }
 ]

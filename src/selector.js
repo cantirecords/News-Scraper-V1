@@ -20,35 +20,40 @@ export async function saveLastSource(source) {
 
 import { getHighQualityImage } from './scraper.js';
 
+function calculateScore(text, source) {
+    let score = 50; // Base score
+    const lowerText = text.toLowerCase();
+
+    // Palabras de Alto Impacto (Puntaje Masivo)
+    if (lowerText.includes('breaking')) score += 50;
+    if (lowerText.includes('live updates')) score += 40;
+    if (lowerText.includes('dead') || lowerText.includes('killed')) score += 30;
+    if (lowerText.includes('shooting') || lowerText.includes('massacre') || lowerText.includes('crash')) score += 30;
+    if (lowerText.includes('war') || lowerText.includes('attack')) score += 20;
+
+    return score;
+}
+
 export async function selectBestArticle(articles, targetLanguage) {
     const lastSource = await getLastSource();
     const candidates = [];
 
     for (const art of articles) {
-        // FILTER: Only articles from the last 24 hours
         const now = new Date();
         const pubDate = new Date(art.pubDate);
-        const diffMs = now - pubDate;
-        const diffHours = diffMs / (1000 * 60 * 60);
+        if ((now - pubDate) / (1000 * 60 * 60) > 24) continue;
 
-        if (diffHours > 24) continue;
-
-        // Solo aceptamos si es nueva
         if (await isNew(art)) {
             const detection = detectCategory(art);
+            let finalScore = calculateScore(art.title, art.source);
 
-            let finalScore = detection.score;
+            // Favor target language but allow general pool
+            if (art.originalLanguage === targetLanguage) finalScore += 20;
 
-            // LÓGICA DE VARIEDAD: Penalizamos la última fuente usada para forzar rotación
-            if (art.source === lastSource) {
-                finalScore -= 40;
-            }
+            // Penalty for repeating same source
+            if (art.source === lastSource) finalScore -= 40;
 
-            candidates.push({
-                ...art,
-                category: detection.category,
-                score: finalScore
-            });
+            candidates.push({ ...art, category: detection.category, score: finalScore });
         }
     }
 
