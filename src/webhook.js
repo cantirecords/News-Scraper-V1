@@ -4,9 +4,14 @@ dotenv.config();
 
 export async function sendToWebhook(article) {
     const url = process.env.WEBHOOK_URL;
-    if (!url || url.includes('your-unique-webhook-id')) {
+
+    // Debug info for GitHub Actions (Doesn't leak the secret)
+    if (process.env.GITHUB_ACTIONS) {
+        console.log(`[Webhook] Running in GitHub Actions. URL length: ${url ? url.length : 0}`);
+    }
+
+    if (!url || url.includes('your-unique-webhook-id') || url.length < 10) {
         console.warn('[Webhook] No valid WEBHOOK_URL configured. Skipping send.');
-        console.log('[Webhook] Payload would have been:', JSON.stringify(article, null, 2));
         return false;
     }
 
