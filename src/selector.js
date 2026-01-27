@@ -18,6 +18,8 @@ export async function saveLastSource(source) {
     await fs.writeFile(STATE_FILE, JSON.stringify({ lastSource: source }, null, 2));
 }
 
+import { getHighQualityImage } from './scraper.js';
+
 export async function selectBestArticle(articles, targetLanguage) {
     const lastSource = await getLastSource();
     const candidates = [];
@@ -31,8 +33,8 @@ export async function selectBestArticle(articles, targetLanguage) {
 
         if (diffHours > 24) continue;
 
-        // Solo aceptamos si es nueva y tiene imagen detectada
-        if (await isNew(art) && art.imageUrl) {
+        // Solo aceptamos si es nueva
+        if (await isNew(art)) {
             const detection = detectCategory(art);
 
             let finalScore = detection.score;
@@ -52,9 +54,23 @@ export async function selectBestArticle(articles, targetLanguage) {
 
     if (candidates.length === 0) return null;
 
-    // Ordenamos por puntuación (Prioridad de tema + Variedad de fuente) y luego por fecha
-    return candidates.sort((a, b) => {
+    // Ordenamos por puntuación y fecha para elegir el mejor
+    const bestArticles = candidates.sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
         return new Date(b.pubDate) - new Date(a.pubDate);
-    })[0];
+    });
+
+    // Intentamos obtener la imagen de alta calidad solo para los mejores candidatos
+    // hasta encontrar uno que tenga una imagen válida
+    for (const best of bestArticles.slice(0, 5)) {
+        console.log(`[Selector] Fetching HQ image for candidate: ${best.title.slice(0, 30)}...`);
+        const hqImage = await getHighQualityImage(best.url);
+        if (hqImage) {
+            return { ...best, imageUrl: hqImage };
+        }
+        // If best has a fallback image URL from RSS, use it if no HQ found
+        if (best.imageUrl) return best;
+    }
+
+    return null;
 }
