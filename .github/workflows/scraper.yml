@@ -35,8 +35,8 @@ jobs:
           DAILY_POSTS_ES: 5
           AI_REWRITE_ENABLED: true
           CLICKBAIT_LEVEL: medium
-          PRIORITY_CATEGORIES: Immigration,ICE,Trump,BreakingNews
-          PRIORITY_STATES: Texas,California,Florida
+          PRIORITY_CATEGORIES: Immigration,ICE,Trump,BreakingNews,Border,Inmigración,Justicia,Furia,Caos
+          PRIORITY_STATES: Texas,California,Florida,NewYork,Arizona
         run: npm start
 
       - name: Commit Tracking Data
@@ -44,5 +44,9 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/*.json
-          git commit -m "Update tracking data [skip ci]" || echo "No changes to commit"
-          git push
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Update tracking data [skip ci]"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
