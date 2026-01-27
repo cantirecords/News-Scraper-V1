@@ -1,0 +1,32 @@
+[
+    {
+        "name": "CNN Top Stories",
+        "url": "http://rss.cnn.com/rss/cnn_topstories.rss",
+        "category": "World",
+        "language": "en"
+    },
+    {
+        "name": "Fox News US",
+        "url": "http://feeds.foxnews.com/foxnews/national",
+        "category": "National",
+        "language": "en"
+    },
+    {
+        "name": "ABC News International",
+        "url": "https://abcnews.go.com/abcnews/internationalheadlines",
+        "category": "World",
+        "language": "en"
+    },
+    {
+        "name": "BBC News US & Canada",
+        "url": "http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml",
+        "category": "National",
+        "language": "en"
+    },
+    {
+        "name": "Telemundo Noticias",
+        "url": "https://www.telemundo.com/feeds/noticias/rss",
+        "category": "National",
+        "language": "es"
+    }
+]
